@@ -17,14 +17,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://localwebventures.com'),
+  metadataBase: new URL('https://localwebventures.net'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'LocalWebVentures - Custom Websites, Dashboards & Web Solutions for Local Businesses',
     description: 'We build custom websites, event booking systems, admin dashboards, online stores, and web solutions for local businesses. From personal portfolios to school systems - if you can think it, we can build it.',
-    url: 'https://localwebventures.com',
+    url: 'https://localwebventures.net',
     siteName: 'LocalWebVentures',
     images: [
       {
