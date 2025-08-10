@@ -1,0 +1,19 @@
+{
+  "name": "LocalWebVentures - High-Performance Websites",
+  "short_name": "LocalWebVentures",
+  "description": "We build professional, high-speed, search-optimized websites for local businesses. 90+ Lighthouse scores, SEO-ready, designed to convert.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/LocalWebVentures-logo.png",
+      "sizes": "444x444",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "en-US"
+}
