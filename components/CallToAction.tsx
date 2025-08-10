@@ -11,23 +11,52 @@ export default function CallToAction() {
     phone: '',
     businessType: '',
     projectType: '',
-    message: ''
+    message: '',
+    referralSource: '',
+    website: '' // honeypot field
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Check honeypot field - if filled, it's likely a bot
+    if (formData.website) {
+      console.log('Bot detected via honeypot field')
+      return
+    }
+    
+    // Basic validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.projectType || !formData.referralSource) {
+      alert('Please fill in all required fields.')
+      return
+    }
+    
+    // Check if name looks suspicious (very short or very long)
+    if (formData.name.trim().length < 2 || formData.name.trim().length > 50) {
+      alert('Please enter a valid name.')
+      return
+    }
+    
+    // Check if email looks valid
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      alert('Please enter a valid email address.')
+      return
+    }
+    
     setIsSubmitting(true)
     
     try {
       const formDataToSend = new FormData()
-      formDataToSend.append('name', formData.name)
-      formDataToSend.append('email', formData.email)
-      formDataToSend.append('phone', formData.phone)
-      formDataToSend.append('businessType', formData.businessType)
+      formDataToSend.append('name', formData.name.trim())
+      formDataToSend.append('email', formData.email.trim())
+      formDataToSend.append('phone', formData.phone.trim())
+      formDataToSend.append('businessType', formData.businessType.trim())
       formDataToSend.append('projectType', formData.projectType)
-      formDataToSend.append('message', formData.message)
+      formDataToSend.append('message', formData.message.trim())
+      formDataToSend.append('referralSource', formData.referralSource)
       
       const response = await fetch('https://formspree.io/f/myzpljne', {
         method: 'POST',
@@ -42,7 +71,16 @@ export default function CallToAction() {
         // Reset form after 5 seconds
         setTimeout(() => {
           setIsSubmitted(false)
-          setFormData({ name: '', email: '', phone: '', businessType: '', projectType: '', message: '' })
+          setFormData({ 
+            name: '', 
+            email: '', 
+            phone: '', 
+            businessType: '', 
+            projectType: '', 
+            message: '', 
+            referralSource: '', 
+            website: '' 
+          })
         }, 5000)
       } else {
         throw new Error('Form submission failed')
@@ -171,8 +209,18 @@ export default function CallToAction() {
                   className="space-y-6"
                 >
                   {/* Hidden honeypot field for spam protection */}
-                  <input type="text" name="_gotcha" style={{ display: 'none' }} />
-                  
+                  <div style={{ display: 'none' }}>
+                    <input
+                      type="text"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                    />
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -259,6 +307,28 @@ export default function CallToAction() {
                   </div>
 
                   <div>
+                    <label htmlFor="referralSource" className="block text-sm font-medium text-gray-700 mb-2">
+                      How did you hear about us? *
+                    </label>
+                    <select
+                      id="referralSource"
+                      name="referralSource"
+                      required
+                      value={formData.referralSource}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                      <option value="">Select an option</option>
+                      <option value="Google Search">Google Search</option>
+                      <option value="Social Media">Social Media</option>
+                      <option value="Referral">Referral from friend/client</option>
+                      <option value="Portfolio">Saw our portfolio</option>
+                      <option value="Advertisement">Advertisement</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                       Tell us about your project
                     </label>
@@ -271,6 +341,11 @@ export default function CallToAction() {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder="Describe your vision, goals, and any specific requirements..."
                     />
+                  </div>
+
+                  {/* Anti-spam notice */}
+                  <div className="text-xs text-gray-500 text-center">
+                    <p>💡 <strong>Pro tip:</strong> To enable reCAPTCHA protection, go to your Formspree dashboard and enable it in the form settings.</p>
                   </div>
 
                   <button
