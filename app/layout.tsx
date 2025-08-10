@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('localwebventures.net'),
+  metadataBase: new URL('https://localwebventures.net'),
   alternates: {
     canonical: '/',
   },
